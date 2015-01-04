@@ -1,1 +1,80 @@
-button.remove-field { display: none;}
+body {
+	font-family: 'Ubuntu', Helvetica, sans-serif;
+	font-weight: 300;
+}
+
+#container { 
+	margin: 3em;
+}
+
+ul.flashes { 
+	padding: 0;
+	border-bottom: 1px solid #aaa;
+}
+
+ul.flashes li {
+	list-style: none;
+	color: #F44336;
+	padding-bottom: 1em;
+}
+
+.multi-field input[type='text'] {
+	font-size: 1.25em;
+	padding: 1rem;
+}
+button.add-field {
+	cursor: pointer;
+	border: none;
+	color: #fff;
+	background: #4CAF50;
+	font-size: 1em;
+}
+button.remove-field { 
+	display: none; 
+	background: #F44336;
+	cursor: pointer;
+	border: none;
+	color: #fff;
+}
+
+input[name='submit'] {
+	font-size: 1em;
+	border: none;
+	background: #2196F3;
+	color: #fff;
+	padding: 0.5em;
+	margin-top: 1em;
+}
+
+div.verba-url {
+	padding: 2rem;
+	background: #4CAF50;
+	font-size: 2em;
+	text-align: center;
+	border-radius: 0.25rem;
+	border: none;
+}
+div.verba-url:hover {
+	background: #00C853;
+}
+a.verba-url {
+	text-decoration: none;
+	color: #fff;	
+}
+
+h2.title {
+	padding-bottom: 1rem;
+	border-bottom: 1px solid #000;
+}
+
+.instructor { 
+	font-weight: 400;
+}
+
+table { 
+	border-collapse: collapse;
+}
+table td {
+	padding: 1em;
+	border-bottom: 1px solid #aaa;
+}

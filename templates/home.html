@@ -1,16 +1,16 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="course-entry">
-	<p>Enter a list of five digit CMU course numbers below.</p>
+<div class="course-entry">	
+	<h1>CMU Book List</h1>
 	<form role="form" action="{{ url_for('fetch_books') }}" method="POST">
 		<div class="multi-field-wrapper">
+			<p>Enter a list of five digit CMU course numbers below.	<button type="button" class="add-field">+ Add course</button></p>
 			<div class="multi-fields">
 				<div class="multi-field">
 				  <input type="text" placeholder="##-###" name="cids">
-				  <button type="button" class="remove-field">X</button>
+				  <button type="button" class="remove-field">X Remove</button>
 				</div>
 			</div>
-			<button type="button" class="add-field">Add another</button>
 		</div>
 		<input type="submit" name="submit" value="Find my books!" />
 	</form>

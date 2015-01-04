@@ -3,6 +3,7 @@
 <head>
 	<title>CMU Book List (Spring 2015)</title>	
 	<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
+	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,400italic' rel='stylesheet' type='text/css'>
 </head>
 <body>
 	<section id="container">
@@ -11,7 +12,7 @@
 			  {% if messages %}
 			    <ul class=flashes>
 			    {% for message in messages %}
-			      <li>{{ message }}</li>
+			      <li>Oops: {{ message }}</li>
 			    {% endfor %}
 			    </ul>
 			  {% endif %}

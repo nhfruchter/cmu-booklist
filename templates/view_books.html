@@ -1,26 +1,32 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="verba-url">
-	<a href="{{ info.url }}">View at CMU bookstore</a>
-</div>
+	<a href="{{ info.url }}" class="verba-url">
+		<div class="verba-url">View at CMU bookstore</div>
+	</a>
 
 <div id="books">
 	{% for course in info.courses %}
 	<div class="course">
-		<h2 class="title">{{ course.name }} ({{ course.instructor or 'Instructor TBD' }}, sections {{ course.sections }})</h2>
+		<h2 class="title">
+			{{ course.name }} 
+			<span class="instructor">
+				({{ course.instructor or 'Instructor TBD' }}, sections {{ course.sections }})
+			</span>	
+		</h2>
+		
 		{% for book in course.books %}
 		<table class="book required-{{ book.required }} isbn-{{ book.isbn }}">
 			<tr class="title">
-				<td>Title</td> <td>{{ book.title }}</td>
+				<td><strong>Title</strong></td> <td>{{ book.title }}</td>
 			</tr>
 			<tr class="author">	
-				<td>Author</td> <td>{{ book.author }}</td>
+				<td><strong>Author</strong></td> <td>{{ book.author }}</td>
 			</tr>
 			<tr class="isbn">	
-				<td>ISBN</td> <td>{{ book.isbn }}</td>
+				<td><strong>ISBN</strong></td> <td>{{ book.isbn }}</td>
 			</tr>
 			<tr class="extra">	
-				<td>More info</td> <td>{{ book.citation|safe }}</td>
+				<td><strong>More info</strong></td> <td>{{ book.citation|safe }}</td>
 			</tr>	
 		</div>	
 		{% else %}
