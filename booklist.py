@@ -3,8 +3,12 @@ import json
 import pickle
 import os
 
+# Memcache backend
+import bookcache as _c
+
 # CMU academic audit parser
 import audit
+
 # JS parser
 from slimit.parser import Parser
 from slimit.visitors import nodevisitor
@@ -117,48 +121,80 @@ class ObjVisitor(ASTVisitor):
                 
 def get_books(mapping, cidlist):
     """Return a list of courses with instructor and book info."""
+    havecache = _c.cacheisactive(_c.CACHE)
+
+    # Don't want to keep hammering their servers, so check if available
+    if havecache:
+        cache, nocache = _c.check(_c.CACHE, [parse_cid(cid) for cid in cidlist])
 
     BASE = "http://cmu.verbacompare.com/comparison?id={}"
-    sections = [cmu_to_verba(mapping, cid) for cid in cidlist]
-    verba_ids = [section['id'] for section in reduce(list.__add__,  sections)]
-    URL = BASE.format(",".join(verba_ids))
     
-    parser = BeautifulSoup(requests.get(URL).content)
-    raw_data = [el.getText() for el in parser.findAll("script")
-                 if 'Verba.Compare' in el.getText()][0] 
-                 
-    # Parse the extracted JS into an AST to extract the correct variable
-    tree = Parser().parse(raw_data)
-    objects = ObjVisitor()
-    # Oh god why
-    objects.visit(tree)
+    # If cache is available, still need to check for uncached stuff
+    if havecache:
+        sections = [cmu_to_verba(mapping, cid) for cid in nocache]
+    else:    
+        sections = [cmu_to_verba(mapping, cid) for cid in cidlist]                    
+    sections = [s for s in sections if s != False]
     
-    # Finally
-    data = [json.loads(d) for d in [i for i in objects.vardump if "isbn" in i]]
-    summary = {
-        'url': URL,
-        'courses': []
-    }
+    verba_info = [cmu_to_verba(mapping, cid) for cid in cidlist]                    
+    verba_info = [s for s in verba_info if s != False]
+    
+    if verba_info:
+        verba_ids = [section['id'] for section in reduce(list.__add__, verba_info)]
+        URL = BASE.format(",".join(verba_ids))
+    
+        if sections:    
+            # Download and parse if needed        
+            parser = BeautifulSoup(requests.get(URL).content)
+            raw_data = [el.getText() for el in parser.findAll("script")
+                         if 'Verba.Compare' in el.getText()][0] 
+             
+            # Parse the extracted JS into an AST to extract the correct variable
+            tree = Parser().parse(raw_data)
+            objects = ObjVisitor()
+            # Oh god why
+            objects.visit(tree)
 
-    for course in data:
-        if course.get('title') and course.get('instructor'):
-            info = {
-                'name': course['title'],
-                'instructor': course['instructor'],
-                'books': []
+            # Finally
+            data = [json.loads(d) for d in [i for i in objects.vardump if "isbn" in i]]
+
+        # Bring in the cached data if it exists, otherwise just initialize empty result
+        if havecache and cache:
+            summary = {
+                'url': URL,
+                'courses': [_c.CACHE.get(cid) for cid in cache]
             }
-            if 'books' in course:
-                for book in course['books']:
-                    bookinfo = {
-                        'title': book['title'],
-                        'author': book['author'],
-                        'isbn': book['isbn'],
-                        'citation': book['citation'],
-                        'required': book['required'].lower() == 'required',
-                    }
-                    info['books'].append(bookinfo)
-            
-        summary['courses'].append(info)
+        else:        
+            summary = {
+                'url': URL,
+                'courses': []
+            }
     
-    return summary    
+        # If we had to grab anything, now put it into the result
+        if sections:
+            for course in data:
+                if course.get('title') and course.get('instructor'):
+                    info = {
+                        'name': course['title'],
+                        'instructor': course['instructor'],
+                        'books': []
+                    }
+                    if 'books' in course:
+                        for book in course['books']:
+                            bookinfo = {
+                                'title': book['title'],
+                                'author': book['author'],
+                                'isbn': book['isbn'],
+                                'citation': book['citation'],
+                                'required': book['required'].lower() == 'required',
+                            }
+                            info['books'].append(bookinfo)                
+                
+                summary['courses'].append(info)
+            
+                if havecache:
+                    # Store in cache for future use
+                    _c.store(_c.CACHE, info)
+    
+        return summary    
         

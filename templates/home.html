@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block body %}
+<div class="course-entry">
+	<p>Enter a list of five digit CMU course numbers below.</p>
+	<form role="form" action="{{ url_for('fetch_books') }}" method="POST">
+		<div class="multi-field-wrapper">
+			<div class="multi-fields">
+				<div class="multi-field">
+				  <input type="text" placeholder="##-###" name="cids">
+				  <button type="button" class="remove-field">X</button>
+				</div>
+			</div>
+			<button type="button" class="add-field">Add another</button>
+		</div>
+		<input type="submit" name="submit" value="Find my books!" />
+	</form>
+</div>		
+{% endblock %}
