@@ -7,7 +7,7 @@
 <div id="books">
 	{% for course in info.courses %}
 	<div class="course">
-		<h2 class="title">{{ course.name }} ({{ course.instructor }})</h2>
+		<h2 class="title">{{ course.name }} ({{ course.instructor or 'Instructor TBD' }}, sections {{ course.sections }})</h2>
 		{% for book in course.books %}
 		<table class="book required-{{ book.required }} isbn-{{ book.isbn }}">
 			<tr class="title">

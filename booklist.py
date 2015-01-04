@@ -125,7 +125,7 @@ def get_books(mapping, cidlist):
 
     # Don't want to keep hammering their servers, so check if available
     if havecache:
-        cache, nocache = _c.check(_c.CACHE, [parse_cid(cid) for cid in cidlist])
+        cache, nocache = _c.check(_c.CACHE, mapping, [parse_cid(cid) for cid in cidlist])
 
     BASE = "http://cmu.verbacompare.com/comparison?id={}"
     
@@ -144,6 +144,7 @@ def get_books(mapping, cidlist):
         URL = BASE.format(",".join(verba_ids))
     
         if sections:    
+            print "Downloading from {}".format(URL)
             # Download and parse if needed        
             parser = BeautifulSoup(requests.get(URL).content)
             raw_data = [el.getText() for el in parser.findAll("script")
@@ -160,9 +161,12 @@ def get_books(mapping, cidlist):
 
         # Bring in the cached data if it exists, otherwise just initialize empty result
         if havecache and cache:
+            print "Grabbing cache..."
+            _courses = [_c.retrieve(_c.CACHE, cid, cmu_to_verba(mapping, cid)) for cid in cache]
+            _courses = reduce(list.__add__, _courses)
             summary = {
                 'url': URL,
-                'courses': [_c.CACHE.get(cid) for cid in cache]
+                'courses': _courses
             }
         else:        
             summary = {
@@ -173,10 +177,11 @@ def get_books(mapping, cidlist):
         # If we had to grab anything, now put it into the result
         if sections:
             for course in data:
-                if course.get('title') and course.get('instructor'):
+                if course.get('title'):
                     info = {
                         'name': course['title'],
-                        'instructor': course['instructor'],
+                        'instructor': course.get('instructor'),
+                        'sections': course['name'],
                         'books': []
                     }
                     if 'books' in course:

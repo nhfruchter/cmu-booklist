@@ -26,22 +26,39 @@ def cacheisactive(mc):
     except:
         return False    
         
-def check(cache, cidlist):
-    cache = []
-    nocache = []
+def cachekey(cid, instructor):
+    return str(hash("{}{}".format(cid, instructor)))
+    
+        
+def check(cache, mapping, cidlist):
+    cache = set()
+    nocache = set()
     
     for cid in cidlist:
-        cid = "".join(cid)
-        if CACHE.get(cid):
-            cache.append(cid)
-        else:
-            nocache.append(cid)    
+        cidstring = "".join(cid)
+        sections = mapping['depts'][cid[0]]['courses'][cidstring]
+        for section in sections:
+            instructor = section['instructor']
+            key = cachekey(cidstring, instructor)
+            if not CACHE.get(key):
+                nocache.add(cidstring)                    
+                break
             
-    return cache, nocache
+            cache.add(cidstring)    
+            
+    return list(cache), list(nocache)
     
 def store(cache, info):
-    key = info['name'].split(" ")[-1].replace("-", "")
+    cid = info['name'].split(" ")[-1].replace("-", "")
+    key = cachekey(cid, info['instructor'])
     if key not in cache:
         cache[key] = info
+    
+def retrieve(cache, cid, verba):
+    result = []
+    for section in verba:
+        key = cachekey(cid, section['instructor'])
+        result.append(cache.get(key))
+    return result    
     
 CACHE = getmemcache()
