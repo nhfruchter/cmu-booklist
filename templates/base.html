@@ -2,6 +2,7 @@
 <html>
 <head>
 	<title>CMU Book List (Spring 2015)</title>	
+	<link rel="stylesheet" href="{{ url_for('static', filename='grid.css') }}" />
 	<link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}" />
 	<link href='http://fonts.googleapis.com/css?family=Ubuntu:300,400,500,700,400italic' rel='stylesheet' type='text/css'>
 </head>
@@ -22,6 +23,12 @@
 		<section id="body">
 			{% block body %}{% endblock %}
 		</section>	
+		
+		<div id="loading">
+			<p>Grabbing book list...</p>
+			<p><img src="{{ url_for('static', filename='ajax-loader.gif') }}" /></p>
+		</div>	
+		
 	</section>
 	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
 	<script src="{{ url_for('static', filename='app.js') }}"></script>

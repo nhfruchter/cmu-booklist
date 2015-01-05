@@ -17,4 +17,11 @@ $(document).ready(function(){
 	            $(this).parent('.multi-field').remove();
 	    });
 	});
+	
+	// Loading screen
+	$("form").submit(function(){
+		$("#body").slideUp(400, function(){
+			$("#loading").fadeIn(200);
+		});
+	});
 });

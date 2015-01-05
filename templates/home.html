@@ -1,18 +1,44 @@
 {% extends "base.html" %}
 {% block body %}
-<div class="course-entry">	
-	<h1>CMU Book List</h1>
-	<form role="form" action="{{ url_for('fetch_books') }}" method="POST">
-		<div class="multi-field-wrapper">
-			<p>Enter a list of five digit CMU course numbers below.	<button type="button" class="add-field">+ Add course</button></p>
-			<div class="multi-fields">
-				<div class="multi-field">
-				  <input type="text" placeholder="##-###" name="cids">
-				  <button type="button" class="remove-field">X Remove</button>
+<div class="info">
+	<h1>CMU Textbook List</h1>
+	<p>Enter a list of five digit CMU course numbers below (e.g., 73-100, 15-112). If a course doesn't show up in the listing, then the class doesn't have any textbooks listed right now.</p>
+	<hr />
+</div>	
+<div class="grid">
+	<div class="course-entry grid__col grid__col--1-of-2">	
+		<h1>Enter your courses</h1>
+		<form role="form" action="{{ url_for('fetch_books') }}" name="manual" method="POST">
+			<div class="multi-field-wrapper">
+				<p><button type="button" class="add-field">+ Add course</button></p>
+				<div class="multi-fields">
+					<div class="multi-field">
+					  <input type="text" placeholder="##-###" name="cids">
+					  <button type="button" class="remove-field">X Remove</button>
+					</div>
 				</div>
 			</div>
-		</div>
-		<input type="submit" name="submit" value="Find my books!" />
-	</form>
-</div>		
+			<input type="submit" name="manual-submit" value="Find my books!" />
+		</form>
+	</div>		
+	<div class="login-entry grid__col grid__col--1-of-2  ">	
+		<h1>...or do it automatically<sup>*</sup></h1>
+		<form role="form" action="{{ url_for('auth_books') }}" name="login" method="POST">
+			<p>
+				<input type="text" name="andrew" placeholder="Andrew ID" required />
+				<input type="password" name="pw" placeholder="Password" required />
+				<br />
+				<input type="submit" name="login-submit" value="Login and find" />			
+			</p>
+		</form>	
+		<footer>
+			<p>* This isn't recommended because you're giving your password away. But you can do it if you want. Proof that I'm not stealing your password.</p>
+		</footer>	
+	</div>
+</div>	
+<hr />
+<footer>
+	<p>Disclaimer: this is a personal project. It's not guaranteed to be accurate, it isn't an official source of information... you get the picture.</p>
+	<p>Made by <a href="http://www.nathanielfruchter.com">Nathaniel Fruchter</a>, 01/2015.</p>
+</footer>	
 {% endblock %}

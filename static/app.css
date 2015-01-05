@@ -3,8 +3,28 @@ body {
 	font-weight: 300;
 }
 
+a {
+color: #388E3C;
+text-decoration: none;
+font-weight: 400;
+}
+
+a:hover{
+	color: #00E676;
+}
+
+input {
+	font-size: 1.25em;
+	padding: 1rem;
+}
+
+
 #container { 
-	margin: 3em;
+	margin: 40px;
+}
+
+footer {
+	font-size: 0.75em;
 }
 
 ul.flashes { 
@@ -18,10 +38,12 @@ ul.flashes li {
 	padding-bottom: 1em;
 }
 
-.multi-field input[type='text'] {
-	font-size: 1.25em;
-	padding: 1rem;
+#loading {
+	text-align: center;
+	font-size: 2em;
+	display: none;
 }
+
 button.add-field {
 	cursor: pointer;
 	border: none;
@@ -37,10 +59,10 @@ button.remove-field {
 	color: #fff;
 }
 
-input[name='submit'] {
+input[type='submit'] {
 	font-size: 1em;
 	border: none;
-	background: #2196F3;
+	background: #388E3C;
 	color: #fff;
 	padding: 0.5em;
 	margin-top: 1em;
@@ -67,6 +89,39 @@ h2.title {
 	border-bottom: 1px solid #000;
 }
 
+.course { 
+	margin: 1em 0;
+	padding: 2em;
+}
+
+.course li {
+	list-style: none;
+	margin: 0 0.5em;
+	list-style: none;
+	font-size: 1.2em;
+	line-height: 2em;
+}
+
+.course ul {
+	padding: 0;
+}
+
+span.reqlabel {
+color: #fff;
+padding: 0.5em;
+font-size: 0.8rem;
+font-weight: 400;
+text-transform: uppercase;
+margin-right: 0.5em;
+}
+
+span.not-required {
+	background: #D4E157;
+}
+span.required {
+	background: #FF9800;
+}
+
 .instructor { 
 	font-weight: 400;
 }
@@ -77,4 +132,9 @@ table {
 table td {
 	padding: 1em;
 	border-bottom: 1px solid #aaa;
+}
+
+.card { 
+	box-sizing: border-box;
+	box-shadow: 0px 2px 5px 0 rgba(0,0,0,0.26);
 }

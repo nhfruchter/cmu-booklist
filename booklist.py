@@ -7,7 +7,7 @@ import os
 import bookcache as _c
 
 # CMU academic audit parser
-import audit
+from audit import academicaudit
 
 # JS parser
 from slimit.parser import Parser

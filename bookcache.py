@@ -36,7 +36,10 @@ def check(cache, mapping, cidlist):
     
     for cid in cidlist:
         cidstring = "".join(cid)
-        sections = mapping['depts'][cid[0]]['courses'][cidstring]
+        try:
+            sections = mapping['depts'][cid[0]]['courses'][cidstring]
+        except KeyError:
+            continue    
         for section in sections:
             instructor = section['instructor']
             key = cachekey(cidstring, instructor)

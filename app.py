@@ -20,12 +20,33 @@ def fetch_books():
     cids = request.form.getlist('cids')
 
     if cids and len(cids) > 0 and cids[0] != '':
-        bookinfo = booklist.get_books(app.config['mapping'], cids)
-        return view_books(bookinfo)
+        try:
+            bookinfo = booklist.get_books(app.config['mapping'], cids)
+            return view_books(bookinfo)            
+        except:    
+            flash("You specified an invalid course number.")
+            return redirect(url_for('home'))   
     else:
         flash("You didn't specify any courses.")
-        return redirect(url_for('home'))
-            
+        return redirect(url_for('home'))   
+        
+@app.route('/auth-books', methods=['POST'])             
+def auth_books():
+    u, p = request.form.get('andrew'), request.form.get('pw')
+    try:
+        audit = booklist.academicaudit(u, p)
+    except:
+        flash("There was a problem logging you in.")
+        return redirect(url_for('home'))   
+    
+    try:
+        cids = booklist.upcoming_courses(audit)
+        bookinfo = booklist.get_books(app.config['mapping'], cids)
+        return view_books(bookinfo)
+    except:
+        flash("There was a problem generating your textbook list.")
+        return redirect(url_for('home'))   
+
 def view_books(info):
     return render_template('view_books.html', info=info)
     
